@@ -1,0 +1,62 @@
+{
+    "Location" : {},
+    "Player" : {},
+    "Health" : {
+        "currentHealth" : 255,
+        "maxHealth" : 255,
+        "regenRate" : 3,
+        "waitBeforeRegen" : 10,
+        "excessSpeedDamageMultiplier" : 20,
+        "fallingDamageSpeedThreshold" : 15
+    },
+    "Hunger" : {
+        "currentContentment" : 200,
+        "maxContentment" : 200,
+        "deregenRate" : 0.4,
+        "waitBeforeDeregen" : 10,
+	    "waitBeetweenDamage" : 12
+    },
+    "CharacterMovement" : {
+        "groundFriction" : 16,
+        "maxGroundSpeed" : 3,
+        "distanceBetweenFootsteps" : 1.5,
+        "height" : 1.6,
+        "radius" : 0.3,
+        "jumpSpeed" : 12
+    },
+    "BoxShape" : {
+        "extents" : [1.5, 1.6, 1.5]
+    },
+    "Trigger" : {
+        "detectGroups" : ["engine:debris"]
+    },
+    "CharacterSound" : {
+        "footstepSounds" : ["engine:FootGrass1","engine:FootGrass2","engine:FootGrass3","engine:FootGrass4","engine:FootGrass5"],
+        "damageSounds"  : ["engine:HeartBeat"],
+    	"landingSounds" :["engine:Land"],
+    	"deathSounds" :["engine:Death"],
+        "footstepVolume" : 0.5,
+        "damageVolume" : 0.25,
+        "deathVolume" : 1.0,
+        "respawnVolume" : 1.0,
+        "swimmingVolume" : 0.25,
+        "diveVolume" : 0.5,
+        "landingVolume" : 0.25
+    },
+    "Inventory" : {
+        "itemSlots": [
+              0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,0,0
+            ]
+    }//,
+//    "Spawner" : {
+//        "types" : ["gelcube", "chromaticgelcube", "metallicgelcube","mare"],
+//		"timeBetweenSpawns" : 10000,
+// 		"maxMobsPerSpawner" : 64,
+//		"rangedSpawning" : true,
+// 		"minDistance" : 8,
+// 		"range" : 18
+//    }
+}

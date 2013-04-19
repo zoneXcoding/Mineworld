@@ -1,0 +1,11 @@
+{
+    "Item" : {
+        "name" : "Book",
+        "icon" : "Book",
+        "usage" : "ON_USER",
+        "renderWithIcon" : true
+    },
+    "Book" : {
+        "type" : "WContents"
+    }
+}

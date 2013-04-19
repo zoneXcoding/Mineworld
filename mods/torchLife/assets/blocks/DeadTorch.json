@@ -1,0 +1,22 @@
+{
+    "rotation" : "AlignToSurface",
+    "sides" : {
+        "shape" : "engine:TorchWall"
+    },
+    "top" : {
+        "shape" : "engine:TorchGrounded"
+    },
+
+    "penetrable" : true,
+    "attachmentAllowed" : false,
+    "shadowCasting" : false,
+    "luminance" : 0,
+    "hardness" : 1,
+    "entity" : {
+        "prefab" : "torchLife:DeadTorch",
+        "mode" : "persistant"
+    },
+    "inventory" : {
+        "directPickup" : false
+    }
+}

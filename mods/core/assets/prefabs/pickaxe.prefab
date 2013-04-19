@@ -1,0 +1,22 @@
+{
+    "Item" : {
+        "name" : "Pick Axe",
+        "icon" : "PickAxe",
+        "perBlockDamageBonus" : {
+            "Stone" : 1
+        },
+        "renderWithIcon" : true
+    },
+
+    "CraftRecipe" : {
+        "recipe" :  {
+            bottom:
+                [
+                    "stone", "stone", "stone",
+                    " ",     "stick", " ",
+                    " ",     "stick", " "
+                ]
+        }
+
+    }
+}

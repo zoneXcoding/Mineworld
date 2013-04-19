@@ -1,0 +1,11 @@
+{
+    "Item" : {
+        "name" : "Miniaturizer",
+        "icon" : "scissors",
+		"usage" : "ON_BLOCK"
+    },
+  	"PlaySoundAction" : {
+    	sounds = "engine:click"
+  	},
+    "Miniaturizer" : {}
+}

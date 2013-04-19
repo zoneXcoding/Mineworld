@@ -1,0 +1,17 @@
+{
+    "Item" : {
+        "name" : "Refinement Rock",
+        "icon" : "refinementRock",
+        "renderWithIcon" : true,
+        "stackId" : "core:refinementrock"
+    },
+    "CraftRecipe" : {
+        "refinement":{
+            "stone:stone:4" : {
+                 "instigator": "stone",
+                 "target":     "stone",
+                 "resultCount" : "4"
+            }
+        }
+    }
+}

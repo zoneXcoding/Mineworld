@@ -1,0 +1,15 @@
+{
+  "CraftRecipe" : {
+        "fullMatch": false,
+        "recipe" :  {
+            bottom:
+                [
+                    "coal", " ", " ",
+                    "coal", " ", " ",
+                    "stick",     " ", " ",
+                ]
+        },
+        resultCount: 4
+
+  }
+}

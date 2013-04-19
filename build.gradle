@@ -1,0 +1,498 @@
+/*
+ * This is a Gradle build file:
+ * - Gradle Homepage: http://gradle.org/
+ * - Gradle Documentation: http://gradle.org/documentation
+ * - View tasks for this project: $ gradlew tasks
+ */
+ 
+apply plugin: 'java'
+apply plugin: 'project-report'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'checkstyle'
+
+/*
+ * Update Gradle Wrapper:
+ * 1. Uncomment 'wrapper' task
+ * 2. Change 'gradleVersion'
+ * 3. Run "gradlew wrapper"
+ * 4. Comment 'wrapper' task
+ */
+//task wrapper(type: Wrapper) {
+//    gradleVersion = '1.4'
+//}
+
+import groovy.json.JsonSlurper
+import org.apache.tools.ant.filters.FixCrLfFilter;
+
+def DEFAULT_MOD_TXT_START = '{\n    "id" : "'
+def DEFAULT_MOD_TXT_END = '",\n    "displayName" : "",\n    "author" : "",\n    "description" : "",\n    "dependencies" : []\n}'
+
+ext {
+    startDateTimeString = new Date().format("yyyy-MM-dd_HH-mm-ss")
+    dirApplet = 'applet'
+    dirNatives = 'natives'
+    dirSavedWorlds = 'SAVED_WORLDS'
+    subDirLibs = 'libs'
+    subDirMods = 'mods'
+    destDirApplet = 'distributions/applet'
+    destDirApplication = 'distributions/application'
+    destDirMainOutput = 'mainOutput'
+    destDirMods = "distributions/$subDirMods"
+    mainClassNameEditor = 'org.terasology.editor.TeraEd'
+    mainClassName = 'org.terasology.game.Terasology'
+    jarFileName = 'Terasology.jar'
+    env = System.getenv() // read environment variables, including variables passed by jenkins continuous integration server
+    versionInfoFileDir = new File(sourceSets.main.output.resourcesDir, 'org/terasology/version')
+    versionInfoFile = new File(versionInfoFileDir, 'versionInfo.properties')
+    versionFileName = 'VERSION'
+    displayVersion = "prealpha"
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://slick2d-maven-dependencies.googlecode.com/svn/trunk/repository/"
+    }
+}
+
+/* Natives ----------------------------------------------------------------- */
+configurations {
+    natives
+}
+
+dependencies {
+    natives group: 'org.lwjgl.lwjgl', name: 'lwjgl', version: '2.8.5'
+}
+
+task extractWindowsNatives(type:Sync) {
+    from {
+        configurations.natives.collect { it.getName().contains('-natives-window') ? zipTree(it) : [] }
+    }
+    into ("$dirNatives/windows")
+    exclude ('META-INF/**')
+}
+
+task extractMacOSXNatives(type:Sync) {
+    from {
+        configurations.natives.collect { it.getName().contains('-natives-osx') ? zipTree(it) : [] }
+    }
+    into ("$dirNatives/macosx")
+    exclude ('META-INF/**')
+}
+
+task extractLinuxNatives(type:Sync) {
+    from {
+        configurations.natives.collect { it.getName().contains('-natives-linux') ? zipTree(it) : [] }
+    }
+    into ("$dirNatives/linux")
+    exclude ('META-INF/**')
+}
+
+task extractNatives {
+    dependsOn extractWindowsNatives
+    dependsOn extractLinuxNatives
+    dependsOn extractMacOSXNatives
+}
+
+/* Java ------------------------------------------------------------- */
+sourceCompatibility = 1.6
+
+sourceSets {
+    dev
+}
+
+configurations {
+    compile {
+        exclude module: 'lwjgl-platform'
+        exclude module: 'jinput-platform'
+    }
+    devCompile.extendsFrom compile
+}
+
+dependencies {
+    compile group: 'org.codehaus.groovy', name: 'groovy', version: '1.8.7'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.2'
+    compile group: 'com.google.guava', name: 'guava', version: '13.0.1'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.2.2'
+    compile group: 'com.google.protobuf', name: 'protobuf-java', version: '2.4.1'
+    compile group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
+    compile group: 'com.projectdarkstar.ext.jorbis', name: 'jorbis', version: '0.0.17'
+    compile group: 'org.lwjgl.lwjgl', name: 'lwjgl', version: '2.8.5'
+    compile group: 'org.lwjgl.lwjgl', name: 'lwjgl_util', version: '2.8.5'
+    compile group: 'io.netty', name: 'netty', version: '3.5.11.Final'
+    compile group: 'org.reflections', name: 'reflections', version: '0.9.8'
+    compile group: 'java3d', name: 'vecmath', version: '1.3.1'
+    compile group: 'com.github.jponge', name: 'lzma-java', version: '1.2'
+    compile group: 'org.newdawn.slick', name: 'slick', version: '236'
+    // Would have liked to have left this runtime, but needed to "compile" the groovy config in IntelliJ
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.0.9'
+    compile fileTree(dir: 'libs', include: '*.jar')
+    testCompile group: 'junit', name: 'junit', version: '4.10'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.0'
+    devCompile sourceSets.main.output
+}
+
+jar {
+    archiveName = jarFileName
+    manifest {
+        def manifestClasspath = "$subDirLibs/"+configurations.runtime.collect { it.getName() }.join(" $subDirLibs/")
+        attributes("Main-Class": mainClassName, "Class-Path" : manifestClasspath, "Implementation-Title": project.name, "Implementation-Version": env.BUILD_NUMBER + ", " + env.GIT_BRANCH + ", " + env.BUILD_ID + ", " + displayVersion)
+    }
+}
+
+task sourceJar(type: Jar) {
+    description = "Create a JAR with all sources (main: java, resources)"
+    manifest.attributes("Implementation-Title": project.name)
+    classifier = 'sources'
+    from sourceSets.main.output
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    description = "Create a JAR with the JavaDoc for the java sources"
+    manifest.attributes("Implementation-Title": project.name)
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+test {
+    // ignoreFailures: Specifies whether the build should break when the verifications performed by this task fail.
+    ignoreFailures = true
+    // showStandardStreams: makes the standard streams (err and out) visible at console when running tests
+    testLogging.showStandardStreams = true
+    jvmArgs '-Xms512m', '-Xmx1024m', '-XX:MaxPermSize=128m'
+}
+
+/* Mods -------------------------------------------------------------------- */
+subprojects {
+    if (name != 'mods') {
+        apply plugin: 'java'
+        apply plugin: 'eclipse'
+        apply plugin: 'idea'
+        
+        sourceSets {
+            main {
+                java {
+                    output.classesDir 'classes'
+                }
+            }
+        }
+        task createSkeleton() {
+            mkdir('assets')
+            mkdir('src/main/java')
+            mkdir('assets/blocks')
+            mkdir('assets/blockTiles')
+            mkdir('assets/fonts')
+            mkdir('assets/materials')
+            mkdir('assets/mesh')
+            mkdir('assets/music')
+            mkdir('assets/prefabs')
+            mkdir('assets/shaders')
+            mkdir('assets/shapes')
+            mkdir('assets/sounds')
+            mkdir('assets/textures')
+            mkdir('src/test/java')
+        }
+        task syncAssets(type: Sync) {
+            from 'assets'
+            into 'classes/assets'
+        }
+        def modFile = file('mod.txt')
+        if (!modFile.exists()) {
+            modFile.createNewFile()
+            modFile.withWriter { writer -> 
+                writer.write(DEFAULT_MOD_TXT_START)
+                writer.write(name)
+                writer.write(DEFAULT_MOD_TXT_END) 
+            }
+        }
+        jar.doFirst {
+            copy {
+                from 'mod.txt'
+                into 'classes'
+            }
+        }
+        jar.dependsOn syncAssets
+        def slurper = new JsonSlurper()
+        def modConfig = slurper.parseText( file('mod.txt').text)
+        def modDepends = modConfig.dependencies;
+        idea {
+            module {
+                inheritOutputDirs = false
+                outputDir = file('classes')
+                testOutputDir = file('testClasses')
+                iml {
+                    generateTo = file('.idea')
+                }
+            }
+        }
+        eclipse {
+            classpath {
+                defaultOutputDir = file('classes')
+            }
+        }
+        repositories {
+            mavenCentral()
+            maven {
+                url "http://slick2d-maven-dependencies.googlecode.com/svn/trunk/repository/"
+            }
+        }
+        dependencies {
+            compile project(':')
+            testCompile group: 'junit', name: 'junit', version: '4.10'
+            for (dependency in modDepends) {
+                compile project(':mods:' + dependency)
+            }
+        }
+    }
+}
+
+
+/* Check ------------------------------------------------------------------- */
+checkstyle.ignoreFailures = true
+checkstyle.configProperties.samedir = checkstyle.configFile.parentFile
+/* Optional check plugins
+apply plugin: 'codenarc'
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
+
+// ignoreFailures: Whether or not this task will ignore failures and continue running the build.
+codenarc.ignoreFailures = true
+findbugs.ignoreFailures = true
+pmd.ignoreFailures = true
+*/
+
+/* Misc tasks ------------------------------------------------------------------- */
+task assembleMainOutput(type:Sync) {
+    from sourceSets.main.output
+    into "$buildDir/$destDirMainOutput"
+}
+
+task modClasses {
+    subprojects.each { project ->
+        if (project.name != 'mods') {
+            modClasses.dependsOn project.tasks['classes']
+        }
+    }
+}
+
+task modAssemble {
+    subprojects.each { project ->
+        if (project.name != 'mods') {
+            modAssemble.dependsOn project.tasks['assemble']
+        }
+    }
+}
+
+task run(type:JavaExec) {
+    description = "Run 'Terasology'"
+
+    dependsOn extractNatives
+    dependsOn assembleMainOutput
+    dependsOn modClasses
+    main = mainClassName
+    classpath "$buildDir/$destDirMainOutput"
+    classpath configurations.runtime
+}
+
+task runTeraEd(type:JavaExec) {
+    description = "Run 'TeraEd'"
+
+    dependsOn extractNatives
+    dependsOn assembleMainOutput
+    dependsOn modClasses
+    main = mainClassNameEditor
+    classpath "$buildDir/$destDirMainOutput"
+    classpath configurations.runtime
+}
+
+task deleteSavedWorldsSubfolders(type: Delete) {
+    description = "Delete all subfolders from '$dirSavedWorlds'"
+    delete file(dirSavedWorlds).listFiles().findAll { it.directory }
+}
+
+task deleteSavedWorldsFiles(type: Delete) {
+    description = "Delete all files from '$dirSavedWorlds'"
+    delete file(dirSavedWorlds).listFiles().findAll { !it.directory }
+}
+
+task zipSavedWorldsFolder(type: Zip) {
+    description = "Creates a SavedWorlds ZIP file from '$dirSavedWorlds'"
+    appendix = "SavedWorlds"
+    classifier = startDateTimeString
+    into (dirSavedWorlds) {
+        from dirSavedWorlds
+    }
+}
+
+task runProtobufWindows(type:Exec) {
+    description = "Run 'Protobuf Compiler' (Windows)"
+    commandLine 'protobuf\\compiler\\protoc.exe', '--proto_path=src\\main\\protobuf', '--java_out', 'src\\main\\java', 'src\\main\\protobuf\\*'
+}
+
+/* Distributions: Application/Applet ----------------------------------------*/
+task createVersionInfoFile {
+    inputs.property('dateTime', startDateTimeString)
+    onlyIf { env.BUILD_URL != null }
+    doLast {
+        versionInfoFileDir.mkdirs()
+        ant.propertyfile (file: versionInfoFile) {
+            ant.entry(key:'buildNumber',value:env.BUILD_NUMBER)
+            ant.entry(key:'buildId',value:env.BUILD_ID)
+            ant.entry(key:'buildTag',value:env.BUILD_TAG)
+            ant.entry(key:'buildUrl',value:env.BUILD_URL)
+            ant.entry(key:'jobName',value:env.JOB_NAME)
+            ant.entry(key:'gitBranch',value:env.GIT_BRANCH)
+            ant.entry(key:'gitCommit',value:env.GIT_COMMIT)
+            ant.entry(key:'dateTime',value:startDateTimeString)
+            ant.entry(key:'displayVersion',value:displayVersion)
+        }
+    }
+}
+createVersionInfoFile.dependsOn processResources
+jar.dependsOn createVersionInfoFile
+
+task createVersionFile(type: Copy) {
+    inputs.property('dateTime', startDateTimeString)
+    onlyIf { env.BUILD_URL != null }
+    from 'src/template'
+    into "$buildDir"
+    include versionFileName
+    expand(buildNumber: env.BUILD_NUMBER, buildUrl: env.BUILD_URL, gitBranch: env.GIT_BRANCH, dateTime: startDateTimeString, displayVersion: displayVersion)
+    filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("crlf"))
+}
+
+task distMods {
+    dependsOn modAssemble
+    subprojects.each { project ->
+        if (project.name != 'mods') {
+            project.task('dist', type: Copy) {
+                from (project.libsDir)
+                into "$buildDir/$destDirMods"
+            }
+            distMods.dependsOn project.tasks['dist']
+        }
+    }
+}
+
+task distApplication(type:Sync) {
+    description = "Creates an Application folder"
+    dependsOn extractNatives
+    dependsOn distMods
+    into("$buildDir/$destDirApplication")
+    from ('Heightmap.txt') {}
+    from ('README.markdown') {
+        filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("crlf"))
+        rename('README.markdown', 'README')
+    }
+    from ('LICENSE') {
+        filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("crlf"))
+    }
+    from ('NOTICE') {
+        filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("crlf"))
+    }
+    from jar
+    from('launchScripts') {
+        exclude('Launcher.xml')
+        exclude('LauncherTeraEd.xml')
+    }
+    into(subDirLibs) {
+        from configurations.runtime
+    }
+    into(dirNatives) {
+        from dirNatives
+    }
+    into(subDirMods) {
+        from "$buildDir/$destDirMods"
+    }
+}
+
+configurations {
+    applet
+}
+
+dependencies {
+    applet group: 'org.lwjgl.lwjgl', name: 'lwjgl_util_applet', version: '2.8.5'
+}
+
+task distApplet(type:Sync) {
+    description = "Creates an Applet folder"
+    dependsOn distMods
+    into("$buildDir/$destDirApplet")
+    from ('README.markdown') {
+        filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("crlf"))
+        rename('README.markdown', 'README')
+    }
+    from ('LICENSE') {
+        filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("crlf"))
+    }
+    from ('NOTICE') {
+        filter(FixCrLfFilter, eol:FixCrLfFilter.CrLf.newInstance("crlf"))
+    }
+    from jar
+    from(dirApplet) {
+        exclude '*.keystore'
+    }
+    from configurations.applet
+    into(subDirLibs) {
+        from configurations.runtime
+        from configurations.natives
+    }
+    into(subDirMods) {
+        from "$buildDir/$destDirMods"
+    }
+}
+distApplet.doLast {
+    file("$buildDir/$destDirApplet").listFiles().each {
+        if (it.getName().endsWith(".jar"))
+            ant.signjar(jar: it, keystore: "$dirApplet/tera.keystore", alias: 'Terasology', storepass: 'Terasology')
+    }
+    file("$buildDir/$destDirApplet/$subDirLibs").listFiles().each {
+        if (it.getName().endsWith(".jar"))
+            ant.signjar(jar: it, keystore: "$dirApplet/tera.keystore", alias: 'Terasology', storepass: 'Terasology')
+    }
+    file("$buildDir/$destDirApplet/$subDirMods").listFiles().each {
+        if (it.getName().endsWith(".jar"))
+            ant.signjar(jar: it, keystore: "$dirApplet/tera.keystore", alias: 'Terasology', storepass: 'Terasology')
+    }
+}
+
+task distModsZip(type:Zip) {
+    description = "Creates a MODs ZIP file from '$buildDir/$destDirMods'"
+    dependsOn distMods
+    appendix 'Mods'
+    from "$buildDir/$destDirMods"
+}
+
+task distApplicationZip(type:Zip) {
+    description = "Creates an Application ZIP file from '$buildDir/$destDirApplication'"
+    dependsOn distApplication
+    dependsOn createVersionInfoFile
+    dependsOn createVersionFile
+    //appendix 'Application'
+    from "$buildDir/$destDirApplication"
+    from "$buildDir/$versionFileName"
+}
+
+task distAppletZip(type:Zip) {
+    description = "Creates an Applet ZIP file from '$buildDir/$destDirApplet'"
+    dependsOn distApplet
+    dependsOn createVersionInfoFile
+    dependsOn createVersionFile
+    appendix 'Applet'
+    from "$buildDir/$destDirApplet"
+    from "$buildDir/$versionFileName"
+}
+
+/* IDE --------------------------------------------------------------------- */
+ideaModule.dependsOn extractNatives
+eclipseClasspath.dependsOn extractNatives
+
+idea {
+    module.excludeDirs += file('bin')
+    module.excludeDirs += file('logs')
+    module.excludeDirs += file('natives')
+    module.excludeDirs += file('protobuf')
+    module.excludeDirs += file('SAVED_WORLDS')
+    module.excludeDirs += file('screens')
+}

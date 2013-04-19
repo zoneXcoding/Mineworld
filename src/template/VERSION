@@ -1,0 +1,6 @@
+Terasology - Version
+====================
+
+Version:    ${displayVersion}
+Created at: ${dateTime}
+Jenkins:    ${buildUrl}
