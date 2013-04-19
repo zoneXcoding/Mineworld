@@ -1,0 +1,33 @@
+/SAVED_WORLDS
+/screens
+/logs
+/out
+/target
+/build
+/dev
+.DS_Store
+/Terasology.iml
+/Terasology.ipr
+/Terasology.iws
+/.idea
+/.classpath
+/.project
+/.settings
+/.checkstyle
+/.gradle
+/bin
+/data/console/consolelog.json
+/mods/*/classes
+/mods/*/testClasses
+/mods/*/build
+/mods/*/.*
+*~
+config.cfg
+entityDump.txt
+
+# Ignore error logs 
+*.log
+
+#Ignore linux directory files
+*.directory
+
