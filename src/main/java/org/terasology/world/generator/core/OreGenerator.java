@@ -94,9 +94,9 @@ public class OreGenerator implements ChunkGenerator {
                 /*
                  * Generate flowers.
                  */
-                    if (flowerRand >= -1.0 && flowerRand < -0.9) {
-                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:CoalOre"));
-                    } else if (flowerRand >= -0.9 && flowerRand < -0.8) {
+                if (flowerRand >= -0.3 && flowerRand < -0.1) {
+                    c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:CoalOre"));
+                    /*} else if (flowerRand >= -0.9 && flowerRand < -0.8) {
                         c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:GoldOre"));
                     } else if (flowerRand >= -0.8 && flowerRand < -0.7) {
                         c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:Gravel"));
@@ -131,8 +131,8 @@ public class OreGenerator implements ChunkGenerator {
                     } else if (flowerRand >= 0.7 && flowerRand < 0.8) {
                         c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:DiamondOre"));
                     } else if (flowerRand >= 0.8 && flowerRand < 0.9) {
-                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:DiamondOre"));
-                    }    //Flower generation
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:DiamondOre"));   */
+                }    //Flower generation
             }
 
         }
