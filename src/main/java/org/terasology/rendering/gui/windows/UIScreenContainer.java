@@ -53,8 +53,8 @@ public class UIScreenContainer extends UIWindow {
         setBackgroundColor(new Color(0, 0, 0, 200));
         setModal(true);
         maximize();
-        setCloseBinds(new String[] {"engine:frob"});
-        setCloseKeys(new int[] {Keyboard.KEY_ESCAPE});
+        setCloseBinds(new String[]{"engine:frob"});
+        setCloseKeys(new int[]{Keyboard.KEY_ESCAPE});
 
         addVisibilityListener(new VisibilityListener() {
             @Override
@@ -89,7 +89,7 @@ public class UIScreenContainer extends UIWindow {
         leftGearWheel.setSize(new Vector2f(36f, 36f));
         leftGearWheel.setTextureOrigin(new Vector2f(121.0f, 168.0f));
         leftGearWheel.setTextureSize(new Vector2f(27.0f, 27.0f));
-        leftGearWheel.setVisible(true);
+        leftGearWheel.setVisible(false);
 
         leftGearWheel.setHorizontalAlign(EHorizontalAlign.CENTER);
         leftGearWheel.setVerticalAlign(EVerticalAlign.BOTTOM);
@@ -102,7 +102,7 @@ public class UIScreenContainer extends UIWindow {
         rightGearWheel.setSize(new Vector2f(36f, 36f));
         rightGearWheel.setTextureOrigin(new Vector2f(121.0f, 168.0f));
         rightGearWheel.setTextureSize(new Vector2f(27.0f, 27.0f));
-        rightGearWheel.setVisible(true);
+        rightGearWheel.setVisible(false);
 
         rightGearWheel.setHorizontalAlign(EHorizontalAlign.CENTER);
         rightGearWheel.setVerticalAlign(EVerticalAlign.BOTTOM);
@@ -125,8 +125,8 @@ public class UIScreenContainer extends UIWindow {
         this.container = container;
         this.creature = creature;
 
-        playerToolbar.setEntity(creature,0, 9);
-        playerInventory.setEntity(creature,10);
+        playerToolbar.setEntity(creature, 0, 9);
+        playerInventory.setEntity(creature, 10);
         containerInventory.setEntity(container);
 
         playerToolbar.setConnected(container);
@@ -138,12 +138,12 @@ public class UIScreenContainer extends UIWindow {
         getGUIManager().getWindowById("hud").getElementById("rightGearWheel").setVisible(false);
         layout();
 
-        playerInventory.setPosition(new Vector2f(Display.getWidth()/2 - playerInventory.getSize().x/2, Display.getHeight() + 5f));
+        playerInventory.setPosition(new Vector2f(Display.getWidth() / 2 - playerInventory.getSize().x / 2, Display.getHeight() + 5f));
         playerInventory.addAnimation(new AnimationMove(new Vector2f(Display.getWidth() / 2 - playerInventory.getSize().x / 2, Display.getHeight() - 192f), 20f));
         playerInventory.getAnimation(AnimationMove.class).start();
-        leftGearWheel.addAnimation(new AnimationRotate(-120f,10f));
+        leftGearWheel.addAnimation(new AnimationRotate(-120f, 10f));
         leftGearWheel.getAnimation(AnimationRotate.class).start();
-        rightGearWheel.addAnimation(new AnimationRotate(120f,10f));
+        rightGearWheel.addAnimation(new AnimationRotate(120f, 10f));
         rightGearWheel.getAnimation(AnimationRotate.class).start();
     }
 }
