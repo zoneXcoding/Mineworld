@@ -1,7 +1,0 @@
-{
-	"id" : "funnyBlocks",
-	"displayName" : "Funny Blocks",
-	"author" : "A'nW",
-	"description" :
-	"A mod adding funny/random goofy blocks just because they are awesome!"
-}

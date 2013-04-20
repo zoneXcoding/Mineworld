@@ -24,15 +24,11 @@ public class OreGenerator implements ChunkGenerator {
     String worldSeed;
     private WorldBiomeProvider biomeProvider;
 
-    private Block grassBlock;
-    private Block snowBlock;
-    private Block sandBlock;
+    private Block stoneBlock;
     private WorldGenerationConfig config = CoreRegistry.get(Config.class).getWorldGeneration();
 
     public OreGenerator() {
-        grassBlock = BlockManager.getInstance().getBlock("engine:Grass");
-        snowBlock = BlockManager.getInstance().getBlock("engine:Snow");
-        sandBlock = BlockManager.getInstance().getBlock("engine:Sand");
+        stoneBlock = BlockManager.getInstance().getBlock("engine:Stone");
 
         System.out.println("Starting oreGenerator!");
     }
@@ -52,7 +48,7 @@ public class OreGenerator implements ChunkGenerator {
 
     private void generateOres(Chunk c, int x, int y, int z, FastRandom random) {
         Block targetBlock = c.getBlock(x, y, z);
-        if ((targetBlock.equals(grassBlock) || targetBlock.equals(sandBlock) || targetBlock.equals(snowBlock)) && c.getBlock(x, y + 1, z).equals(BlockManager.getInstance().getAir())) {
+        if ((targetBlock.equals(stoneBlock))) {
 
             double grassRand = (random.randomDouble() + 1.0) / 2.0;
             double grassProb = 1.0;
@@ -99,45 +95,46 @@ public class OreGenerator implements ChunkGenerator {
                  * Generate flowers.
                  */
                     if (flowerRand >= -1.0 && flowerRand < -0.9) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:CoalOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:CoalOre"));
                     } else if (flowerRand >= -0.9 && flowerRand < -0.8) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:GoldOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:GoldOre"));
                     } else if (flowerRand >= -0.8 && flowerRand < -0.7) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:Gravel"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:Gravel"));
                     } else if (flowerRand >= -0.7 && flowerRand < -0.6) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:IronOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:IronOre"));
                     } else if (flowerRand >= -0.6 && flowerRand < -0.5) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:GoldOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:GoldOre"));
                     } else if (flowerRand >= -0.5 && flowerRand < -0.4) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:IronOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:IronOre"));
                     } else if (flowerRand >= -0.4 && flowerRand < -0.3) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:IronOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:IronOre"));
                     } else if (flowerRand >= -0.3 && flowerRand < -0.2) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:IronOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:IronOre"));
                     } else if (flowerRand >= -0.2 && flowerRand < -0.1) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:IronOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:IronOre"));
                     } else if (flowerRand >= -0.1 && flowerRand < 0.0) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:GoldOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:GoldOre"));
                     } else if (flowerRand >= 0.0 && flowerRand < 0.1) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:GoldOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:GoldOre"));
                     } else if (flowerRand >= 0.1 && flowerRand < 0.2) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:CoalOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:CoalOre"));
                     } else if (flowerRand >= 0.2 && flowerRand < 0.3) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:CopperOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:CopperOre"));
                     } else if (flowerRand >= 0.3 && flowerRand < 0.4) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:CopperOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:CopperOre"));
                     } else if (flowerRand >= 0.4 && flowerRand < 0.5) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:GoldOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:GoldOre"));
                     } else if (flowerRand >= 0.5 && flowerRand < 0.6) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:DiamondOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:DiamondOre"));
                     } else if (flowerRand >= 0.6 && flowerRand < 0.7) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:DiamondOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:DiamondOre"));
                     } else if (flowerRand >= 0.7 && flowerRand < 0.8) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:DiamondOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:DiamondOre"));
                     } else if (flowerRand >= 0.8 && flowerRand < 0.9) {
-                        c.setBlock(x, y + 1, z, BlockManager.getInstance().getBlock("engine:DiamondOre"));
+                        c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:DiamondOre"));
                     }    //Flower generation
             }
+
         }
     }
 
