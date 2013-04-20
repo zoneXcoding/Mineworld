@@ -12,7 +12,7 @@ public class RenderingConfig {
     private PixelFormat pixelFormat = new PixelFormat().withDepthBits(24);
     private int windowWidth = 1280;
     private int windowHeight = 720;
-    private boolean fullscreen = true;
+    private boolean fullscreen = false;
     private int viewDistanceNear = 8;
     private int viewDistanceModerate = 16;
     private int viewDistanceFar = 32;
@@ -25,7 +25,7 @@ public class RenderingConfig {
     private float fieldOfView = 90;
     private boolean cameraBobbing = true;
     private boolean renderPlacingBox = true;
-    private int blurIntensity = 3;
+    private int blurIntensity = 0;
     private boolean reflectiveWater = false;
     private boolean vignette = true;
     private boolean motionBlur = false;

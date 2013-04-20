@@ -18,19 +18,12 @@ package org.terasology.rendering.gui.windows;
 import org.terasology.asset.Assets;
 import org.terasology.config.Config;
 import org.terasology.game.CoreRegistry;
-import org.terasology.game.GameEngine;
-import org.terasology.game.TerasologyEngine;
 import org.terasology.logic.manager.ShaderManager;
 import org.terasology.rendering.gui.framework.UIDisplayElement;
 import org.terasology.rendering.gui.framework.events.ChangedListener;
 import org.terasology.rendering.gui.framework.events.ClickListener;
 import org.terasology.rendering.gui.framework.events.StateButtonAction;
-import org.terasology.rendering.gui.widgets.UIButton;
-import org.terasology.rendering.gui.widgets.UIImage;
-import org.terasology.rendering.gui.widgets.UILabel;
-import org.terasology.rendering.gui.widgets.UISlider;
-import org.terasology.rendering.gui.widgets.UIStateButton;
-import org.terasology.rendering.gui.widgets.UIWindow;
+import org.terasology.rendering.gui.widgets.*;
 
 import javax.vecmath.Vector2f;
 
@@ -225,7 +218,7 @@ public class UIMenuConfigVideo extends UIWindow {
         blurIntensityButton.addClickListener(clickAction);
         blurIntensityButton.setHorizontalAlign(EHorizontalAlign.CENTER);
         blurIntensityButton.setPosition(new Vector2f(blurIntensityButton.getSize().x / 2f, 300f + 2 * 40f));
-        blurIntensityButton.setVisible(true);
+        blurIntensityButton.setVisible(false);
 
         /*fullscreenButton = new UIStateButton(new Vector2f(256f, 32f));
         StateButtonAction fullscreenStateAction = new StateButtonAction() {
@@ -311,6 +304,6 @@ public class UIMenuConfigVideo extends UIWindow {
         //    fullscreenButton.setState(1);
         //} else {
         //    fullscreenButton.setState(0);
-       // }
+        // }
     }
 }
