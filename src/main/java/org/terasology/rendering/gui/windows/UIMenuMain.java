@@ -15,8 +15,6 @@
  */
 package org.terasology.rendering.gui.windows;
 
-import javax.vecmath.Vector2f;
-
 import org.newdawn.slick.Color;
 import org.terasology.asset.Assets;
 import org.terasology.game.CoreRegistry;
@@ -27,6 +25,8 @@ import org.terasology.rendering.gui.widgets.UIButton;
 import org.terasology.rendering.gui.widgets.UIImage;
 import org.terasology.rendering.gui.widgets.UILabel;
 import org.terasology.rendering.gui.widgets.UIWindow;
+
+import javax.vecmath.Vector2f;
 
 /**
  * Main menu screen.
@@ -50,11 +50,12 @@ public class UIMenuMain extends UIWindow {
         setBackgroundImage("engine:menubackground");
         setModal(true);
         maximize();
-        
+
         _title = new UIImage(Assets.getTexture("engine:terasology"));
         _title.setSize(new Vector2f(512f, 128f));
         _title.setHorizontalAlign(EHorizontalAlign.CENTER);
         _title.setVerticalAlign(EVerticalAlign.TOP);
+        _title.setPosition(new Vector2f(0f, 0f + 200f));
         _title.setVisible(true);
 
         _version = new UILabel("Pre Alpha");
@@ -82,7 +83,7 @@ public class UIMenuMain extends UIWindow {
         _exitButton.setHorizontalAlign(EHorizontalAlign.CENTER);
         _exitButton.setPosition(new Vector2f(0 - 190f, 300f + 4 * 40f));
         _exitButton.setVisible(true);
-        
+
         _configButton = new UIButton(new Vector2f(128f, 32f), UIButton.ButtonType.NORMAL);
         _configButton.getLabel().setText("Settings");
         _configButton.addClickListener(new ClickListener() {
@@ -110,17 +111,17 @@ public class UIMenuMain extends UIWindow {
 
         _multiPlayerButton = new UIButton(new Vector2f(512f, 32f), UIButton.ButtonType.NORMAL);
         _multiPlayerButton.getLabel().setText("Multiplayer");
-        _multiPlayerButton.addClickListener(new ClickListener(){
-        	@Override
-        	public void click(UIDisplayElement element, int button) {
-        		getGUIManager().openWindow("multiplayer");
-        	}
+        _multiPlayerButton.addClickListener(new ClickListener() {
+            @Override
+            public void click(UIDisplayElement element, int button) {
+                getGUIManager().openWindow("multiplayer");
+            }
         });
-        
+
         _multiPlayerButton.setHorizontalAlign(EHorizontalAlign.CENTER);
         _multiPlayerButton.setPosition(new Vector2f(0f, 300f + 2 * 40f));
         _multiPlayerButton.setVisible(true);
-        
+
         addDisplayElement(_title);
         addDisplayElement(_version);
         addDisplayElement(_copyright);
