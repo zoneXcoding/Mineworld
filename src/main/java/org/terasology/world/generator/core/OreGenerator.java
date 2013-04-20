@@ -94,7 +94,7 @@ public class OreGenerator implements ChunkGenerator {
                 /*
                  * Generate flowers.
                  */
-                if (flowerRand >= -0.3 && flowerRand < -0.1) {
+                if (flowerRand >= -1.0 && flowerRand < -0.8) {
                     c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:CoalOre"));
                     /*} else if (flowerRand >= -0.9 && flowerRand < -0.8) {
                         c.setBlock(x, y - 1, z, BlockManager.getInstance().getBlock("engine:GoldOre"));
