@@ -15,22 +15,25 @@
  */
 package org.terasology.rendering.gui.windows;
 
-import javax.vecmath.Vector2f;
-import javax.vecmath.Vector4f;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.Color;
 import org.terasology.asset.Assets;
-import org.terasology.game.types.GameType;
 import org.terasology.game.CoreRegistry;
+import org.terasology.game.types.GameType;
 import org.terasology.logic.LocalPlayer;
 import org.terasology.rendering.gui.animation.AnimationMove;
 import org.terasology.rendering.gui.animation.AnimationRotate;
 import org.terasology.rendering.gui.framework.UIDisplayElement;
 import org.terasology.rendering.gui.framework.events.MouseButtonListener;
 import org.terasology.rendering.gui.framework.events.VisibilityListener;
-import org.terasology.rendering.gui.widgets.*;
+import org.terasology.rendering.gui.widgets.UIImage;
+import org.terasology.rendering.gui.widgets.UIItemCell;
+import org.terasology.rendering.gui.widgets.UIItemContainer;
+import org.terasology.rendering.gui.widgets.UIWindow;
+
+import javax.vecmath.Vector2f;
+import javax.vecmath.Vector4f;
 
 /**
  * The player's inventory.
@@ -52,10 +55,10 @@ public class UIScreenInventory extends UIWindow {
         setId("inventory");
         setBackgroundColor(new Color(0, 0, 0, 200));
         setModal(true);
-        setCloseBinds(new String[] {"engine:inventory"});
-        setCloseKeys(new int[] {Keyboard.KEY_ESCAPE});
+        setCloseBinds(new String[]{"engine:inventory"});
+        setCloseKeys(new int[]{Keyboard.KEY_ESCAPE});
         maximize();
-        
+
         addVisibilityListener(new VisibilityListener() {
             @Override
             public void changed(UIDisplayElement element, boolean visibility) {
@@ -67,15 +70,15 @@ public class UIScreenInventory extends UIWindow {
                     getGUIManager().getWindowById("hud").getElementById("leftGearWheel").setVisible(false);
                     getGUIManager().getWindowById("hud").getElementById("rightGearWheel").setVisible(false);
                     layout();
-                    inventory.setPosition(new Vector2f(Display.getWidth()/2 - inventory.getSize().x/2, Display.getHeight() + 5f));
+                    inventory.setPosition(new Vector2f(Display.getWidth() / 2 - inventory.getSize().x / 2, Display.getHeight() + 5f));
                     inventory.addAnimation(new AnimationMove(new Vector2f(Display.getWidth() / 2 - inventory.getSize().x / 2, Display.getHeight() - 192f), 20f));
                     inventory.getAnimation(AnimationMove.class).start();
 
-                    leftGearWheel.addAnimation(new AnimationRotate(-120f,10f));
+                    leftGearWheel.addAnimation(new AnimationRotate(-120f, 10f));
                     leftGearWheel.getAnimation(AnimationRotate.class).start();
-                    rightGearWheel.addAnimation(new AnimationRotate(120f,10f));
+                    rightGearWheel.addAnimation(new AnimationRotate(120f, 10f));
                     rightGearWheel.getAnimation(AnimationRotate.class).start();
-                }else{
+                } else {
                     getGUIManager().getWindowById("hud").getElementById("leftGearWheel").setVisible(true);
                     getGUIManager().getWindowById("hud").getElementById("rightGearWheel").setVisible(true);
                 }
@@ -121,7 +124,7 @@ public class UIScreenInventory extends UIWindow {
         leftGearWheel.setSize(new Vector2f(36f, 36f));
         leftGearWheel.setTextureOrigin(new Vector2f(121.0f, 168.0f));
         leftGearWheel.setTextureSize(new Vector2f(27.0f, 27.0f));
-        leftGearWheel.setVisible(true);
+        leftGearWheel.setVisible(false);
 
         leftGearWheel.setHorizontalAlign(EHorizontalAlign.CENTER);
         leftGearWheel.setVerticalAlign(EVerticalAlign.BOTTOM);
@@ -134,7 +137,7 @@ public class UIScreenInventory extends UIWindow {
         rightGearWheel.setSize(new Vector2f(36f, 36f));
         rightGearWheel.setTextureOrigin(new Vector2f(121.0f, 168.0f));
         rightGearWheel.setTextureSize(new Vector2f(27.0f, 27.0f));
-        rightGearWheel.setVisible(true);
+        rightGearWheel.setVisible(false);
 
         rightGearWheel.setHorizontalAlign(EHorizontalAlign.CENTER);
         rightGearWheel.setVerticalAlign(EVerticalAlign.BOTTOM);
