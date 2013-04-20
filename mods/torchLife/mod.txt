@@ -1,7 +1,0 @@
-{
-    "id" : "torchLife",
-    "displayName" : "TorchLife",
-    "author" : "APexPanda",
-    "description" : "This adds a better aspect to real life. Also your torches run out of fuel after a certain amount of time.",
-    "dependencies" : []
-}
