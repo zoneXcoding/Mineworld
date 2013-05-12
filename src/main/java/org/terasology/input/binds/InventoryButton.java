@@ -26,6 +26,6 @@ import org.terasology.input.RegisterBindButton;
  * @author Immortius
  */
 @RegisterBindButton(id = "inventory", description = "Inventory")
-@DefaultBinding(type = InputType.KEY, id = Keyboard.KEY_I)
+@DefaultBinding(type = InputType.KEY, id = Keyboard.KEY_E)
 public class InventoryButton extends BindButtonEvent {
 }

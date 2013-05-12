@@ -57,13 +57,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_LEQUAL;
-import static org.lwjgl.opengl.GL11.GL_NORMALIZE;
-import static org.lwjgl.opengl.GL11.glDepthFunc;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * @author Immortius
@@ -129,18 +123,21 @@ public class TerasologyEngine implements GameEngine {
             try {
                 config = Config.load(Config.getConfigFile());
                 config.getDefaultModSelection().addMod("core");
-                config.getDefaultModSelection().addMod("torchLife");
+                config.getDefaultModSelection().addMod("craft");
+                config.getDefaultModSelection().addMod("hunger");
             } catch (IOException e) {
                 logger.error("Failed to load config", e);
                 config = new Config();
                 config.getDefaultModSelection().addMod("core");
-                config.getDefaultModSelection().addMod("torchLife");
+                config.getDefaultModSelection().addMod("craft");
+                config.getDefaultModSelection().addMod("hunger");
             }
             CoreRegistry.put(Config.class, config);
         } else {
             config = new Config();
             config.getDefaultModSelection().addMod("core");
-            config.getDefaultModSelection().addMod("torchLife");
+            config.getDefaultModSelection().addMod("craft");
+            config.getDefaultModSelection().addMod("hunger");
             config.save();
             CoreRegistry.put(Config.class, config);
         }
@@ -395,7 +392,7 @@ public class TerasologyEngine implements GameEngine {
     }
 
     private void cleanup() {
-        logger.info("Shutting down Terasology...");
+        logger.info("Shutting down Mineworld...");
         config.save();
         if (currentState != null) {
             currentState.dispose();

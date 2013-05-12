@@ -26,6 +26,6 @@ import org.terasology.input.RegisterBindButton;
  * @author Immortius
  */
 @RegisterBindButton(id = "console", description = "Toggle Console")
-@DefaultBinding(type = InputType.KEY, id = Keyboard.KEY_TAB)
+@DefaultBinding(type = InputType.KEY, id = Keyboard.KEY_T)
 public class ConsoleButton extends BindButtonEvent {
 }

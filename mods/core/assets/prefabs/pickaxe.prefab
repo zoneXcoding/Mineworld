@@ -3,9 +3,10 @@
         "name" : "Pick Axe",
         "icon" : "PickAxe",
         "perBlockDamageBonus" : {
-            "Stone" : 1
+            "Stone" : 10
         },
-        "renderWithIcon" : true
+        "renderWithIcon" : true,
+        "baseDamage" : 1
     },
 
     "CraftRecipe" : {
